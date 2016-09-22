@@ -6,6 +6,7 @@ __global__ void vectorAdd(float *A, float *B, float *C, int numElements)
 
     if (tid < numElements)
         C[tid] = A[tid] + B[tid];
+        print("This Thread is %d",tid);
 }
 
 int main(int argc, char* argv[])
@@ -26,7 +27,7 @@ int main(int argc, char* argv[])
 
     // Allocate the device input vector A
     float *d_A, *d_B, *d_C;
-    
+
     cudaMalloc(&d_A, numElements * sizeof(float));
     cudaMalloc(&d_B, numElements * sizeof(float));
     cudaMalloc(&d_C, numElements * sizeof(float));
@@ -38,16 +39,16 @@ int main(int argc, char* argv[])
     // Launch the Vector Add CUDA Kernel
     int threadsPerBlock = 256;
     int blocksPerGrid = (numElements + threadsPerBlock - 1) / threadsPerBlock;
-    
+
     printf("CUDA kernel launch with %d blocks of %d threads\n", blocksPerGrid, threadsPerBlock);
-    
+
     vectorAdd<<<blocksPerGrid, threadsPerBlock>>>(d_A, d_B, d_C, numElements);
 
     // Copy the device result vector in device memory to the host result vector
     cudaMemcpy(h_C, d_C, numElements * sizeof(float), cudaMemcpyDeviceToHost);
-    
+
     cudaError_t cudaError = cudaGetLastError();
-  
+
     if(cudaError != cudaSuccess)
     {
         fprintf(stderr, "cudaGetLastError() returned %d: %s\n", cudaError, cudaGetErrorString(cudaError));
@@ -61,7 +62,7 @@ int main(int argc, char* argv[])
             fprintf(stderr, "Result verification failed at element %d!\n", i);
             exit(EXIT_FAILURE);
         }
-        
+
     printf("Sum of the vectors was OK\n");
 
     // Free device global memory
@@ -73,6 +74,6 @@ int main(int argc, char* argv[])
     free(h_A);
     free(h_B);
     free(h_C);
-    
+
     return 0;
 }

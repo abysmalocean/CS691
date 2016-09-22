@@ -6,7 +6,7 @@ __global__ void vectorAdd(float *A, float *B, float *C, int numElements)
 
     if (tid < numElements)
         C[tid] = A[tid] + B[tid];
-        print("This Thread is %d",tid);
+        printf("This Thread is %d\n",tid);
 }
 
 int main(int argc, char* argv[])

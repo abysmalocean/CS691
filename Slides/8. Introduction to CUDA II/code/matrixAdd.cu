@@ -124,7 +124,7 @@ int main(int argc, char* argv[])
             exit(EXIT_FAILURE);
         }
 
-    printf("Sum of the matrixes was OK\n");
+    printf("Sum of the matrixes was OK\n\n\n");
     }
 
 	// Option 3: 1D grid of 1D thread blocks (MOST EFFICIENT), smaller number of larger transactions
@@ -191,4 +191,3 @@ int main(int argc, char* argv[])
 
     return 0;
 }
-

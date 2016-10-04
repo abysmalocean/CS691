@@ -22,7 +22,7 @@ __global__ void matrixMulTiled(float *A, float *B, float *C, int width)
 {
     int column = ( blockDim.x * blockIdx.x ) + threadIdx.x;
 	int row    = ( blockDim.y * blockIdx.y ) + threadIdx.y;
-	
+
     float sum = 0;
 
     // Loop over the A and B tiles required to compute the submatrix
@@ -30,20 +30,20 @@ __global__ void matrixMulTiled(float *A, float *B, float *C, int width)
     {
         __shared__ float sub_A[TILE_WIDTH][TILE_WIDTH];
         __shared__ float sub_B[TILE_WIDTH][TILE_WIDTH];
-        
+
         // Coolaborative loading of A and B tiles into shared memory
         sub_A[threadIdx.y][threadIdx.x] = A[row*width + (t*TILE_WIDTH + threadIdx.x)];
         sub_B[threadIdx.y][threadIdx.x] = B[column + (t*TILE_WIDTH + threadIdx.y)*width];
-        
+
         __syncthreads();
-    
+
         // Loop within shared memory
         for (int k = 0; k < TILE_WIDTH; k++)
           sum += sub_A[threadIdx.y][k] * sub_B[k][threadIdx.x];
-      
+
         __syncthreads();
     }
-    
+
     C[row*width + column] = sum;
 }
 
@@ -63,32 +63,24 @@ void MatrixMultiplicationHost(float *A, float *B, float *C, int width)
 
 int main(int argc, char* argv[])
 {
-	int matrixSize = 512; // square matrix matrixSize * matrixSize
-	int numElements = matrixSize * matrixSize;
+	int numElements = 2147483646; // Max size of the int
 
 	// Allocate host memory
 	float *h_A = (float *)malloc(numElements * sizeof(float));
-	float *h_B = (float *)malloc(numElements * sizeof(float));
-	float *h_C = (float *)malloc(numElements * sizeof(float));
-	float *h_C_CPUres = (float *)malloc(numElements * sizeof(float));
 
 	// Initialize the host input matrixs
 	for (int i = 0; i < numElements; ++i)
 	{
 		h_A[i] = rand()/(float)RAND_MAX;
-		h_B[i] = rand()/(float)RAND_MAX;
 	}
 
-	// Allocate the device input matrix A
-	float *d_A, *d_B, *d_C;
+	// Allocate the device input array A
+	float *d_A;
 
 	cudaMalloc(&d_A, numElements * sizeof(float));
-	cudaMalloc(&d_B, numElements * sizeof(float));
-	cudaMalloc(&d_C, numElements * sizeof(float));
 
 	// Copy the host input matrixs A and B in host memory to the device input matrixs in
 	cudaMemcpy(d_A, h_A, numElements * sizeof(float), cudaMemcpyHostToDevice);
-	cudaMemcpy(d_B, h_B, numElements * sizeof(float), cudaMemcpyHostToDevice);
 
 	cudaEvent_t start, stop;
 	cudaEventCreate(&start);
@@ -102,10 +94,10 @@ int main(int argc, char* argv[])
 	dim3 gridSize (gridDimSize, gridDimSize);
 
 	printf("CUDA kernel launch with %dx%d blocks of %dx%d threads\n", gridDimSize, gridDimSize, threadsPerBlockDim, threadsPerBlockDim);
-	
+
 	cudaEventRecord(start);
 
-	matrixMul<<<gridSize, blockSize>>>(d_A, d_B, d_C, matrixSize);
+	matrixMul<<<gridSize, blockSize>>>(d_A, d_B, d_C, numElements);
 
 	cudaEventRecord(stop);
 	cudaEventSynchronize(stop);

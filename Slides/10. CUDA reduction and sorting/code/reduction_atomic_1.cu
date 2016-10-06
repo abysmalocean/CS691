@@ -17,9 +17,9 @@ int main(int argc, char* argv[])
     int *h_result = (int *)malloc(sizeof(int));
 
     cudaEvent_t start, stop;
-	cudaEventCreate(&start);
-	cudaEventCreate(&stop);
-	float milliseconds = 0;
+	  cudaEventCreate(&start);
+	  cudaEventCreate(&stop);
+	  float milliseconds = 0;
 
     // Initialize the host input vectors
     for (int i = 0; i < numElements; i++)
@@ -45,9 +45,9 @@ int main(int argc, char* argv[])
     reduce_atomic<<<blocksPerGrid, threadsPerBlock>>>(d_result, d_array, numElements);
 
     cudaEventRecord(stop);
-	cudaEventSynchronize(stop);
-	cudaEventElapsedTime(&milliseconds, start, stop);
-	printf("GPU time %f ms\n", milliseconds);
+	  cudaEventSynchronize(stop);
+	  cudaEventElapsedTime(&milliseconds, start, stop);
+	  printf("GPU time %f ms\n", milliseconds);
 
     // Copy the result
     cudaMemcpy(h_result, d_result, sizeof(int), cudaMemcpyDeviceToHost);
@@ -83,4 +83,3 @@ int main(int argc, char* argv[])
 
     return 0;
 }
-

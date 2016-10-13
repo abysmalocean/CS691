@@ -1,0 +1,19 @@
+remote:
+  host: "172.18.199.200"
+  user: "xul4"
+  path: "/home/xul4/ClassPractice/CUDAPractice"
+behaviour:
+  uploadOnSave: true
+  syncDownOnOpen: true
+  forgetConsole: false
+  autoHideConsole: true
+  alwaysSyncAll: false
+option:
+  deleteFiles: false
+  exclude: [
+    ".sync-config.cson"
+    ".git"
+    "node_modules"
+    "tmp"
+    "vendor"
+  ]

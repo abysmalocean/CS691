@@ -443,7 +443,7 @@ Email: xul4@vcu.edu}}
 % As a general rule, do not put math, special symbols or citations
 % in the abstract or keywords.
 \begin{abstract}
-This paper survey is the second assignment for CS691 High performance distributed system in VCU. The topic of this survey is applications of GPU computing to data visualization in data mining. A growing number of data scientists are using GPUs for big data analytics to make better, real-time business decisions. More recently, data visualization has coughed attention by data mining field. How to transform data from high dimension to 2D or 3D which can be recognized by human visualizations becomes very popular question. 
+This paper survey is the second assignment for CS691 High performance distributed system in VCU. The topic of this survey is applications of GPU computing to data visualization in data mining. A growing number of data scientists are using GPUs for big data analytics to make better, real-time business decisions. More recently, data visualization has coughed attention by data mining field. How to transform data from high dimension to 2D or 3D which can be recognized by human visualizations becomes a very popular research topic. For example, MRI and CT scanners, data become too large to be effectively visualized on standard workstations in commonplace. One solution to this problem is to employ a  visualization cluster, a small to medium scale cluster dedicated to performing visualization. The cluster is designed for transform high data to human understandable graph, which GPU has dramatic contribution\cite{fogal2010large}
 
 In this paper, we survey the-state-of-the-art algorithms and applications in GPU computing to data visualization in data mining and discuss the future research opportunities.
 
@@ -485,12 +485,15 @@ GPU, Data Visualization, Data Mining
 % 
 % Here we have the typical use of a "T" for an initial drop letter
 % and "HIS" in caps to complete the first word.
-\IEEEPARstart{D}{ata} visualization is an essential component of data analysis. It involves the creation and study of the visual representation of data. A primary goal of data visualization is to communicate information clearly and efficiently via statistical graphics. Data visualization is both an art and a science. It is viewed as a branch of descriptive statistics by some, but also as a grounded theory development tool by others. \cite{ramirez2016data} 
+\IEEEPARstart{D}{ata} visualization is human and machine collaboration to mass data where extract the most informative features and it is become an essential component of data analysis. It involves the creation and study of the visual representation of data. A primary goal of data visualization is to communicate information clearly and efficiently via statistical graphics. Data visualization is both an art and a science and it provides a bridge from human understanding to the information from a mass data set. This information includes relations between features, structure of the data and revealing the underling relationship between features.\cite{icke2011multi,ramirez2016data}.
 
-General-purpose computing on graphics processing units is the use of a graphics processing unit (GPU), which typically handles computation only for computer graphics, to perform computation in applications traditionally handled by the central processing unit (CPU). \cite{fung2002mediated,cudaguide} 
+General-purpose computing on graphics processing units is the use of a graphics processing unit (GPU), which typically handles computation only for computer graphics, to perform computation in applications traditionally handled by the central processing unit (CPU)\cite{fung2002mediated,cudaguide}.  
+GPU is initially designed for game application, however, GPUs demonstrate impressive computing power and high levels of parallelism and are now being used for may applications which not limited by the graph computation. The GPU provides the computing power especially for the algorithm can be parallelize. The GPU assisted algorithms are playing an important role in data vitalization, which include simple matrix manipulation\cite{larsen2001fast, hall2003cache, bolz2003sparse}, FFT\cite{moreland2003fft,von2004fourier}, and wavelet transform\cite{hopf1999hardware,tenllado2008parallel} and so on\cite{guha2005data}. 
 
-
-
+It is often desirable to visualize a data set the items of which are described by more than three features. Therefore, we have multidimensional data and our goal is to make some visual insight into the data set analyzed. For human perception, the data must be represented in a low-dimensional space, usually of two or three
+dimensions. The goal of visualization methods is to represent the multidimensional data in a low-dimensional space so that certain properties of the structure of the data set were preserved as faithfully as possible. Such a visualization of data is highly important in data mining because recent applications produce a large amount of data that require specific means for knowledge discovery.
+The dimensionality reduction or visualization methods are recent techniques to discover knowledge hidden in multidimensional data sets\cite{dzemyda2013multidimensional}.
+Visualization algorithm require extensive compute power relative to data size. One possible solution is to use large scale supercomputer, which has required computational power. One alternative approach is to use a smaller scale computer equipped with GPUs, which can provide the needed computational power \cite{fogal2010large}. 
 
 
 % You must have at least 2 lines in the paragraph with the drop letter
@@ -606,46 +609,35 @@ General-purpose computing on graphics processing units is the use of a graphics 
 % \fnbelowfloat command of the stfloats package.
 
 
-\section{Background}
-Data visualization is human and machine collaboration to mass data where extract the most informative features. Visualization provides a bridge from human understanding to the information from a mass data set. This information includes relations between features, structure of the data and revealing the underling relationship between features.\cite{icke2011multi}
-GPU is initially designed for game application, however, GPUs demonstrate impressive computing power and high levels of parallelism and are now being used for may applications which not limited by the graph computation. The GPU provides the computing power especially for the algorithm can be parallelize. The GPU assisted algorithms are playing an important role in data vitalization, which include simple matrix manipulation\cite{larsen2001fast, hall2003cache, bolz2003sparse}, FFT\cite{moreland2003fft,von2004fourier}, and wavelet transform\cite{hopf1999hardware,tenllado2008parallel} and so on.\cite{guha2005data} 
-
-\subsection{history}
-
-\subsection{latest development}
-
-		\begin{equation}
-			\sqrt{2} \sin x, \sqrt{2}\,\sin x
-		\end{equation}
-
-		\begin{figure}[hp]
-			\centering
-			\includegraphics[scale = 0.2]{Figure/FPGA.jpg}
-			\caption{FPGA Development Board}
-			\label{FPGA1}
-		\end{figure}
-
-		\begin{table}[hp]
-			\centering
-			\caption{Test Table}
-			\label{my-label}
-			\begin{tabular}{|l|l|l|l|l|}
-				\hline
-				laign & xu    & thsi & is     & a    \\ \hline
-				table & table & is   & goodf  & make \\ \hline
-				a     & table & from & this q & web  \\ \hline
-				is    & esay  & and  & fast   & !!!  \\ \hline
-			\end{tabular}
-		\end{table}
-
-
-\section{Methodology}
-
-\section{GPU contribution for data visualization}
-
+\section{latest development}
+In this section, several latest ideas about using GPU for data visualization in data mining are going to discussed in the following paper. 
+	\subsection{hardware solution}
+	
+	One solution to solve large data visualization is to employ a 'visualization cluster', a small to medium scale cluster dedicated to performing visualization and analysis of massive data sets\cite{fogal2010large}. These clusters are designed to fit a different need than traditional supercomputer, and therefore their design mandates different hardware choices, such as GPUs. Their system is divided into three stages: 1. An intelligent per-partitioning which is designed to make combining results from different nodes easy. 2, A GPU volume render to perform the per-frame volume rendering work at interactive rates.3, MPI-based compositing based on a sort-last compositing framework. They implement their remote rendering system inside of VisIt(VisIt is an Open Source, interactive, scalable, visualization, animation and analysis tool), which is capable of rendering data in parallel on remote machines. The system is comprised of a 'viewer' client application, connected over TCP to a server which employs GPU cluster nodes.All rendering is performed on the cluster, composited via MPI, and images are sent back to the viewer for display. 
+	
+	This research demonstrate that a multiple GPU mode is a grate foundational building block to compose larger systems capable of rendering very large data. More importantly, the performance-price ratio of a GPU is higher than CPU based solutions, this work makes the case for spending more visualization supercomputing capital on hardware acceleration, and acquiring smaller yet more performance clusters. 
+	
+	\subsection{algorithm solution}
+	High dimensional data challenge to many data mining and data visualization algorithms. The performance of those algorithms are cursed by dimensionality and high computational cost. 
+		
+		\subsubsection{matrix multiplication}
+		One of the important computational cost is the matrix multiplication. Fatahalian and Sugerman published one famous paper discussed about matrix and matrix multiplication. \cite{fatahalian2004understanding}, and Rech Et.al also discuss about the efficiency about the efficiency of matrix multiplication. Some of the research works are talk about the sparse matrix multiplication\cite{dalton2015optimizing}. From the result we could found out the performance of GPU. Matrix multiplication is the building block of the high dimensional algorithm. 
+		
+		\subsubsection{dimension reduction method}
+		It is difficult to perceive the data structure using the direct visualization methods, particularly when we deal with large data sets or data of high dimensionality. Another group of method is based on reduction of dimensionality of data. Their advantage is that each n-dimensional object is represented as a point in the space of low-dimensionality d \cite{dzemyda2013multidimensional}. 
+		Principal Component Analysis(PCA) is a well known data analysis technique. The property of the set is that the largest part of its information content is stored in the first few coordinates (components) of points. In Liu and Zhang's paper, they proposed a large scale PCA method based on GPU. Specifically, They construct parallel implementations of the four
+		optimization formulations for the GPU, and compare this with a CPU implementation . Using real-world data, they experimentally validate the effectiveness of PCA and
+		demonstrate that the parallel GPU implementation of PCA can significantly improve
+		performance.
+		Wavelet decomposition and reconstruction is usually implemented by applying multiple convolution and down-up-sampling steps to the volume data\cite{hopf1999hardware,garcia2005gpu,franco20122d}. Franco et.al proposed a research about CUDA implementation for the 2D Fast Wavelet Transform on GPUs. which uses a pair of Quadrature Mirror Filters and provides insight into techniques used to wrench the full performance out of the resources for a large class of important scientific applications. Experimental results show great success for this techniques: Data coalescing saves one-third of the execution time when performing 1D-FWTs over rows and columns, and accessing data in shared memory free of bank conflicts produces a similar benefit.
+		
+				
+	\subsection{real time data visualization }
+		Some of the research works are focus on the real time applications. Liu Et.al proposed a method called imMeans for real time big data visualization using GPU. They contribute methods for real-time visualization\cite{liu2013immens}. To enable real-time interaction, they integrate
+		multivariate data tiles and parallel processing using GPU.They implement those methods in imMens, a browser-based system using WebGL. WebGL is currently the only standardized way to access GPU processing in a web browser. Future browser-based GPGPU or parallel computing (multi-core) features will permit alternative approaches. Their general approach of generating multivariate data tiles and leveraging parallel query processing is also directly applicable in standard (non-web) desktop contexts. 
 
 \section{Conclusion}
-The conclusion goes here.
+This literature survey is focus on the data visualization in data mining by using GPU. Since the data visualization involve high dimensional data transform to 2 or 3 dimensional data, which is computational expensive. GPU provide hight computational power can improve the performance. The survey list several latest research topic both from hardware and software solution to improve the performance. It is hoped that by providing a bird’s eye view of the research field, this paper will offer clear directions for future developments in the area.
 
 
 % if have a single appendix:

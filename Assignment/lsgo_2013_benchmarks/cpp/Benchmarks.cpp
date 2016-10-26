@@ -1,5 +1,8 @@
 #include "Benchmarks.h"
 
+extern "C"
+double GPUcompute(double* x,double resultTest, unsigned run);
+
 Benchmarks::Benchmarks(){
   dimension = 1000000;
   nonSeparableGroupSize = 50;
@@ -26,6 +29,28 @@ Benchmarks::Benchmarks(){
 
   // minX = -100;
   // maxX = 100;
+}
+double Benchmarks::GPUcomputefunction(double* x,double resultTest, unsigned run)
+{
+  //printf("Liang\n" );
+  int i;
+  Ovector = NULL;
+  minX = -32;
+  maxX = 32;
+  ID = 3;
+  anotherz = new double[dimension];
+  if(Ovector == NULL) {
+          // Ovector = createShiftVector(dimension,minX,maxX);
+          Ovector = readOvector();
+  }
+  for(i = dimension - 1; i >= 0; i--) {
+          anotherz[i] = x[i] - Ovector[i];
+  }
+
+  //dimension = 1000;
+  printf("Liang Xu\n");
+  GPUcompute( anotherz,resultTest, run);
+  return 0 ;
 }
 
 void Benchmarks::setMinX(int inVal){

@@ -60,6 +60,9 @@ class Benchmarks{
   double sphere(double*x,int dim, int k);
   double rosenbrock(double*x,int dim);
   double rosenbrock(double*x,int dim, int k);
+
+
+
   unsigned convertMatrixToArrayIndex ( unsigned i, unsigned j );
   void createIndexMapping (  );
   /* void extractElemByPerm(); */
@@ -111,8 +114,10 @@ class Benchmarks{
   Benchmarks();
   virtual ~Benchmarks();
   virtual double compute(double* x){return 0;};
-	virtual double GPUcompute(double* x,double resultTest, unsigned run){return 0;};
+	//virtual double GPUcompute(double* x,double resultTest, unsigned run){return 0;};
   virtual double compute(vector<double> x){return 0;};
+
+  double GPUcomputefunction(double* x,double resultTest, unsigned run);
 
   int getMinX();
   int getMaxX();

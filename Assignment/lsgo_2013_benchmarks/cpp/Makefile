@@ -5,7 +5,7 @@ CXXFLAGS =-Wall -pedantic -std=c++0x  -ggdb -DDEBUG
 CXXFLAGS_F3 =-O3 -gencode arch=compute_60,code=sm_60 -gencode arch=compute_35,code=sm_35
 OBJECTS=demo.o  Benchmarks.o \
  F1.o F2.o F3.o F4.o F5.o F6.o F7.o F8.o F9.o F10.o\
- F11.o F12.o F13.o F14.o F15.o
+ F11.o F12.o F13.o F14.o F15.o Ackley.o
 
 demo: 	$(OBJECTS)
 	$(nvcc) $(CXXFLAGS_F3) -o demo $(OBJECTS)
@@ -26,6 +26,9 @@ F2.o: F2.h Benchmarks.h F2.cpp
 
 F3.o: F3.h Benchmarks.h F3.cu
 	$(nvcc) $(CXXFLAGS_F3) -c F3.cu
+
+Ackley.o: Benchmarks.h Ackley.cu
+	$(nvcc) $(CXXFLAGS_F3) -c Ackley.cu
 
 F4.o: F4.h Benchmarks.h F4.cpp
 	$(CC) $(CXXFLAGS) -c F4.cpp

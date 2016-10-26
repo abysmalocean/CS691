@@ -74,6 +74,7 @@ void preProcess(uchar4 **h_inputImageRGBA, uchar4 **h_outputImageRGBA,
 
   //create and fill the filter we will convolve with
   *h_filter = new float[blurKernelWidth * blurKernelWidth];
+  //std::cout << "*h_filter is "<< blurKernelWidth * blurKernelWidth <<"\n";
   h_filter__ = *h_filter;
 
   float filterSum = 0.f; //for normalization
@@ -83,6 +84,9 @@ void preProcess(uchar4 **h_inputImageRGBA, uchar4 **h_outputImageRGBA,
       float filterValue = expf( -(float)(c * c + r * r) / (2.f * blurKernelSigma * blurKernelSigma));
       (*h_filter)[(r + blurKernelWidth/2) * blurKernelWidth + c + blurKernelWidth/2] = filterValue;
       filterSum += filterValue;
+      //int position = (r + blurKernelWidth/2) * blurKernelWidth + c + blurKernelWidth/2;
+      //std::cout<<"filterValue is "<<filterValue<<" And saved to "<<position<<"\n";
+      //printf("filterSum is %d\n", (int)1);
     }
   }
 
@@ -120,7 +124,7 @@ void cleanUp(void)
 }
 
 
-// An unused bit of code showing how to accomplish this assignment using OpenCV.  It is much faster 
+// An unused bit of code showing how to accomplish this assignment using OpenCV.  It is much faster
 //    than the naive implementation in reference_calc.cpp.
 void generateReferenceImage(std::string input_file, std::string reference_file, int kernel_size)
 {

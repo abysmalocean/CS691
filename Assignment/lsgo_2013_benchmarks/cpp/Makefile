@@ -2,7 +2,7 @@ CC=g++
 nvcc=nvcc
 # CXXFLAGS=-Wall -pedantic -std=c++11 -O3
 CXXFLAGS =-Wall -pedantic -std=c++0x  -ggdb -DDEBUG
-CXXFLAGS_F3 =-O3 -gencode arch=compute_60,code=sm_60 -gencode arch=compute_35,code=sm_35
+CXXFLAGS_F3 = -O3 -gencode arch=compute_30,code=sm_30 -gencode arch=compute_35,code=sm_35 -gencode arch=compute_50,code=sm_50 -gencode arch=compute_52,code=sm_52
 OBJECTS=demo.o  Benchmarks.o \
  F1.o F2.o F3.o F4.o F5.o F6.o F7.o F8.o F9.o F10.o\
  F11.o F12.o F13.o F14.o F15.o Ackley.o

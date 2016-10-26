@@ -79,7 +79,7 @@ double GPUcompute(double* x,double resultTest, unsigned run);
  }
 
 __global__ void ackleyKernel(double* z, int dim,double* d_sum1, double* d_sum2){
-  //printf("Liang XU in kernel\n");
+  printf("Liang XU in kernel\n");
 /*******************************************************************************
    //************ First need to calcuate the X[i]**********************************
  ********************************************************************************/

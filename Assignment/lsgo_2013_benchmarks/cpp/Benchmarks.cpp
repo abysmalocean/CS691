@@ -1,7 +1,7 @@
 #include "Benchmarks.h"
 
 Benchmarks::Benchmarks(){
-  dimension = 1000;		
+  dimension = 1000000;
   nonSeparableGroupSize = 50;
   MASK = ((L(1)) << (L(48))) - (L(1));
   m_havenextGaussian = false;
@@ -29,7 +29,7 @@ Benchmarks::Benchmarks(){
 }
 
 void Benchmarks::setMinX(int inVal){
-  minX = inVal;	
+  minX = inVal;
 }
 void Benchmarks::setMaxX(int inVal){
   maxX = inVal;
@@ -132,6 +132,10 @@ double* Benchmarks::createShiftVector(int dim, double min,double max) {
 double* Benchmarks::readOvector()
 {
   // read O vector from file in csv format
+  //Liang
+  int dimension_fileread = 1000;
+  //liangxu
+  //double* d = new double[dimension];
   double* d = new double[dimension];
   stringstream ss;
   ss<< "cdatafiles/" << "F" << ID << "-xopt.txt";
@@ -139,7 +143,7 @@ double* Benchmarks::readOvector()
   string value;
   string line;
   int c=0;
-  
+
   if (file.is_open())
     {
       stringstream iss;
@@ -163,6 +167,14 @@ double* Benchmarks::readOvector()
     {
       cout<<"Cannot open datafiles"<<endl;
     }
+  int tid = 0;
+  for (int i = 1; i < 1000; i++) {
+    tid = i * 1000;
+    for (int j = 0; j < dimension_fileread; j++) {
+      d[tid+j] = d[j];
+      //printf("d[%d] = d[%d] ---> %f\n",tid+j,j,d[tid+j] );
+    }
+  }
   return d;
 }
 
@@ -178,7 +190,7 @@ double** Benchmarks::readOvectorVec()
   int c = 0;                      // index over 1 to dim
   int i = -1;                      // index over 1 to s_size
   int up = 0;                   // current upper bound for one group
-  
+
   if (file.is_open())
     {
       stringstream iss;
@@ -208,9 +220,8 @@ double** Benchmarks::readOvectorVec()
     {
       cout<<"Cannot open datafiles"<<endl;
     }
-  return d;  
+  return d;
 }
-
 
 void Benchmarks::transform_osz(double* z, int dim)
 {
@@ -509,10 +520,10 @@ double* Benchmarks::rotateVector(int i, int &c)
       anotherz1 = multiply( z, r25, s[i]);
     }
   else if (s[i] == 50)
-    {    
+    {
       anotherz1 = multiply( z, r50, s[i]);
     }
-  else if (s[i] == 100) 
+  else if (s[i] == 100)
     {
       anotherz1 = multiply( z, r100, s[i]);
     }
@@ -529,7 +540,7 @@ double* Benchmarks::rotateVectorConform(int i, int &c)
 {
   double* z = new double[s[i]];
   // printf("i=%d\tc=%d\tl=%d\tu=%d\n", i, c, c - (i)*overlap, c +s[i] - (i)*overlap);
-  
+
   // copy values into the new vector
   for (int j = c - i*overlap; j < c +s[i] - i*overlap; ++j)
     {
@@ -542,10 +553,10 @@ double* Benchmarks::rotateVectorConform(int i, int &c)
       anotherz1 = multiply( z, r25, s[i]);
     }
   else if (s[i] == 50)
-    {    
+    {
       anotherz1 = multiply( z, r50, s[i]);
     }
-  else if (s[i] == 100) 
+  else if (s[i] == 100)
     {
       anotherz1 = multiply( z, r100, s[i]);
     }
@@ -562,12 +573,12 @@ double* Benchmarks::rotateVectorConflict(int i, int &c, double* x)
 {
   double* z = new double[s[i]];
   // printf("i=%d\tc=%d\tl=%d\tu=%d\n", i, c, c - (i)*overlap, c +s[i] - (i)*overlap);
-  
+
   // copy values into the new vector
   for (int j = c - i*overlap; j < c +s[i] - i*overlap; ++j)
     {
       // cout<<"j-c "<<j-c<<" p "<<Pvector[j]<<endl;
-      z[j-(c - i*overlap)] = x[Pvector[j]] - OvectorVec[i][j-(c - i*overlap)];  
+      z[j-(c - i*overlap)] = x[Pvector[j]] - OvectorVec[i][j-(c - i*overlap)];
     }
 
   // cout<<"copy done"<<endl;
@@ -576,10 +587,10 @@ double* Benchmarks::rotateVectorConflict(int i, int &c, double* x)
       anotherz1 = multiply( z, r25, s[i]);
     }
   else if (s[i] == 50)
-    {    
+    {
       anotherz1 = multiply( z, r50, s[i]);
     }
-  else if (s[i] == 100) 
+  else if (s[i] == 100)
     {
       anotherz1 = multiply( z, r100, s[i]);
     }
@@ -612,7 +623,7 @@ double* Benchmarks::rotateVectorConflict(int i, int &c, double* x)
 
 
 
-/* 
+/*
  * Basic Mathematical Functions' Implementation
  */
 // // elliptic function for F1 ~ F8
@@ -633,7 +644,7 @@ double* Benchmarks::rotateVectorConflict(int i, int &c, double* x)
 double Benchmarks::elliptic(double*x,int dim) {
   double result = 0.0;
   int    i;
-  
+
   transform_osz(x, dim);
 
   // for(i = dim - 1; i >= 0; i--) {
@@ -642,7 +653,7 @@ double Benchmarks::elliptic(double*x,int dim) {
       // printf("%f\n", pow(1.0e6,  i/((double)(dim - 1)) ));
       result += pow(1.0e6,  i/((double)(dim - 1)) ) * x[i] * x[i];
     }
-  
+
   return(result);
 }
 
@@ -651,7 +662,7 @@ unsigned Benchmarks::getID(){
   return ID;
 }
 
-// // elliptic function for F9 ~ 
+// // elliptic function for F9 ~
 // double Benchmarks::elliptic(double*x, int dim, int k) {
 //   double result = 0.0;
 //   int    i;
@@ -668,10 +679,10 @@ unsigned Benchmarks::getID(){
 double Benchmarks::rastrigin(double*x,int dim){
   double sum = 0;
   int    i;
-  
+
   // T_{osz}
   transform_osz(x, dim);
-  
+
   // T_{asy}^{0.2}
   transform_asy(x, 0.2, dim);
 
@@ -681,7 +692,7 @@ double Benchmarks::rastrigin(double*x,int dim){
   for(i = dim - 1; i >= 0; i--) {
     sum += x[i] * x[i] - 10.0 * cos(2 * PI * x[i]) + 10.0;
   }
-  
+
   return(sum);
 }
 
@@ -697,49 +708,6 @@ double Benchmarks::rastrigin(double *x, int dim, int k)
   return(result);
 }
 
-// ackley function for single group non-separable 
-double Benchmarks::ackley(double*x,int dim){
-  double sum1 = 0.0;
-  double sum2 = 0.0;
-  double sum;
-  int    i;
-
-  // T_{osz}
-  transform_osz(x,dim);
-  
-  // T_{asy}^{0.2}
-  transform_asy(x, 0.2, dim);
-
-  // lambda
-  Lambda(x, 10, dim);
-
-  for(i = dim - 1; i >= 0; i--) {
-    sum1 += (x[i] * x[i]);
-    sum2 += cos(2.0 * PI * x[i]);
-  }
-
-  sum = -20.0 * exp(-0.2 * sqrt(sum1 / dim)) - exp(sum2 / dim) + 20.0 + E;
-  return(sum);
-}
-
-// ackley function for m-group non-separable 
-double Benchmarks::ackley(double *x, int dim, int k)
-{
-  double sum1=0.0;
-  double sum2=0.0;
-  double result=0.0;
-  int i;
-
-  for(i=dim/k-1;i>=0;i--)
-    {
-      sum1+=x[Pvector[dim/k+i]]*x[Pvector[dim/k+i]];
-      sum2+=cos(2.0*PI*x[Pvector[dim/k+i]]);
-    }
-
-  result=-20.0*exp(-0.2*sqrt(sum1/(dim/k)))-exp(sum2/(dim/k))+20.0+E;
-
-  return(result);
-}
 
 double* Benchmarks::multiply(double*vector, double*matrix,int dim){
   int    i,j;
@@ -904,10 +872,10 @@ double Benchmarks::schwefel(double*x,int dim){
   int    j;
   double s1 = 0;
   double s2 = 0;
-  
+
   // T_{osz}
   transform_osz(x,dim);
-  
+
   // T_{asy}^{0.2}
   transform_asy(x, 0.2, dim);
 
@@ -968,13 +936,13 @@ double Benchmarks::rosenbrock(double*x,int dim, int k){
 int Benchmarks::getMinX(){
   return minX;
 }
-	
+
 int Benchmarks::getMaxX(){
   return maxX;
 }
 
 
-/* 
+/*
  * ===  FUNCTION  ======================================================================
  *         Name:  getInterArray
  *  Description:  get the variable interaction information in the representation of one
@@ -988,23 +956,23 @@ Benchmarks::getInterArray (  )
 }		/* -----  end of function getInterArray  ----- */
 
 
-/* 
+/*
  * ===  FUNCTION  ======================================================================
  *         Name:  convertMatrixToArrayIndex
- *  Description:  
+ *  Description:
  * =====================================================================================
  */
-unsigned	
+unsigned
 Benchmarks::convertMatrixToArrayIndex ( unsigned i, unsigned j )
 {
   return ( i* (2*dimension-i-3) / 2 + j - 1);
 }		/* -----  end of function convertMatrixToArrayIndex  ----- */
 
 
-/* 
+/*
  * ===  FUNCTION  ======================================================================
  *         Name:  createIndexMapping
- *  Description:  
+ *  Description:
  * =====================================================================================
  */
 void
@@ -1024,10 +992,10 @@ Benchmarks::createIndexMapping (  )
 }		/* -----  end of function CCVIL::createIndexMapping  ----- */
 
 
-/* 
+/*
  * ===  FUNCTION  ======================================================================
  *         Name:  ArrToMat
- *  Description:  
+ *  Description:
  * =====================================================================================
  */
 void
@@ -1039,16 +1007,16 @@ Benchmarks::ArrToMat ( unsigned I1, unsigned I2, unsigned &matIndex )
       return ;
     }
   }
-	
+
   printf ( "Cannot locate the matrix index from given array indices\n" );
   exit(EXIT_FAILURE);
 }		/* -----  end of function Benchmarks::ArrToMat  ----- */
 
 
-/* 
+/*
  * ===  FUNCTION  ======================================================================
  *         Name:  Benchmarks::MatToArr
- *  Description:  
+ *  Description:
  * =====================================================================================
  */
 void
@@ -1100,5 +1068,3 @@ double Benchmarks::c2(double x)
       return 3.1;
     }
 }
-
-

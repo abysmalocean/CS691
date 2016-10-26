@@ -1,18 +1,19 @@
 CC=g++
+nvcc=nvcc
 # CXXFLAGS=-Wall -pedantic -std=c++11 -O3
-CXXFLAGS=-Wall -pedantic -std=c++0x  -ggdb -DDEBUG
-
+CXXFLAGS =-Wall -pedantic -std=c++0x  -ggdb -DDEBUG
+CXXFLAGS_F3 =-O3 -gencode arch=compute_60,code=sm_60 -gencode arch=compute_35,code=sm_35
 OBJECTS=demo.o  Benchmarks.o \
-F1.o F2.o F3.o F4.o F5.o F6.o F7.o F8.o F9.o F10.o\
-F11.o F12.o F13.o F14.o F15.o 
+ F1.o F2.o F3.o F4.o F5.o F6.o F7.o F8.o F9.o F10.o\
+ F11.o F12.o F13.o F14.o F15.o
 
 demo: 	$(OBJECTS)
-	$(CC) $(CXXFLAGS) -o demo $(OBJECTS)
+	$(nvcc) $(CXXFLAGS_F3) -o demo $(OBJECTS)
 
 demo.o: demo.cpp Header.h  Benchmarks.h \
 F1.h F2.h F3.h F4.h F5.h F6.h F7.h F8.h F9.h F10.h\
-F11.h F12.h F13.h F14.h F15.h 
-	$(CC) $(CXXFLAGS) -c demo.cpp 
+F11.h F12.h F13.h F14.h F15.h
+	$(CC) $(CXXFLAGS) -c demo.cpp
 
 Benchmarks.o:  Benchmarks.h Benchmarks.cpp
 	$(CC) $(CXXFLAGS) -c Benchmarks.cpp
@@ -23,8 +24,8 @@ F1.o: F1.h Benchmarks.h F1.cpp
 F2.o: F2.h Benchmarks.h F2.cpp
 	$(CC) $(CXXFLAGS) -c F2.cpp
 
-F3.o: F3.h Benchmarks.h F3.cpp
-	$(CC) $(CXXFLAGS) -c F3.cpp
+F3.o: F3.h Benchmarks.h F3.cu
+	$(nvcc) $(CXXFLAGS_F3) -c F3.cu
 
 F4.o: F4.h Benchmarks.h F4.cpp
 	$(CC) $(CXXFLAGS) -c F4.cpp

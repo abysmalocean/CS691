@@ -1,6 +1,7 @@
 #ifndef _BENCHMARKS_H
 #define _BENCHMARKS_H
 
+#include <stdio.h>
 #include <sstream>
 #include <vector>
 #include <fstream>
@@ -44,7 +45,7 @@ class Benchmarks{
   /* double elliptic_new(double*x,int dim); */
   /* double elliptic(double*x, int dim, int k); */
   double rastrigin(double*x,int dim);
-  double rastrigin(double *x, int dim, int k); 
+  double rastrigin(double *x, int dim, int k);
   double ackley(double*x,int dim);
   double ackley(double*x,int dim, int k);
   /* double rot_elliptic(double*x,int dim); */
@@ -60,7 +61,7 @@ class Benchmarks{
   double rosenbrock(double*x,int dim);
   double rosenbrock(double*x,int dim, int k);
   unsigned convertMatrixToArrayIndex ( unsigned i, unsigned j );
-  void createIndexMapping (  ); 
+  void createIndexMapping (  );
   /* void extractElemByPerm(); */
   double* rotateVector(int i, int &c);
   double* rotateVectorConform(int i, int &c);
@@ -104,14 +105,15 @@ class Benchmarks{
   double** r100;
   int* s;
   double* w;
-  
+
 
  public:
   Benchmarks();
   virtual ~Benchmarks();
   virtual double compute(double* x){return 0;};
+	virtual double GPUcompute(double* x,double resultTest, unsigned run){return 0;};
   virtual double compute(vector<double> x){return 0;};
-	
+
   int getMinX();
   int getMaxX();
   unsigned getID();
@@ -124,7 +126,7 @@ class Benchmarks{
   vector<bool> getInterArray (  );
   void ArrToMat ( unsigned I1, unsigned I2, unsigned &matIndex );
   void MatToArr ( unsigned &I1, unsigned &I2, unsigned matIndex );
-        
+
   /* for CEC2013SS */
   double* readOvector();
   double** readOvectorVec();
@@ -132,7 +134,7 @@ class Benchmarks{
   double** readR(int sub_dim);
   int* readS(int num);
   double* readW(int num);
-  
+
   void transform_osz(double* z, int dim);
   void transform_asy(double* z, double beta, int dim);
   void Lambda(double* z, double alpha, int dim);
@@ -140,7 +142,7 @@ class Benchmarks{
   double hat(double x);
   double c1(double x);
   double c2(double x);
-  
+
 };
 
 #endif

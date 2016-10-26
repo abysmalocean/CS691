@@ -3,44 +3,58 @@
 #include <cstdio>
 #include <unistd.h>
 
-int main(){
+int main(int argc, char* argv[]){
   /*  Test the basic benchmark function */
   double* X;
   Benchmarks* fp=NULL;
-  unsigned dim = 1000;
-  unsigned funToRun[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
-  // unsigned funToRun[] = {1};
+  unsigned dim = 1000000;
+  //unsigned funToRun[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
+
+   unsigned funToRun[] = {3};
   // unsigned funToRun[] = {15};
-  unsigned funNum = 15;
+  unsigned funNum = 1;
   unsigned run = 1;
+  char *p;
+  if (argc == 2)
+  {
+    run = (unsigned)strtol(argv[1], &p, 10);
+  }
 
   vector<double> runTimeVec;
   struct timeval start, end;
-  long seconds, useconds;    
+  long seconds, useconds;
   double mtime;
-        
+  double resultTest;
+
   X = new double[dim];
   for (unsigned i=0; i<dim; i++){
     X[i]=0;
   }
 
+
   for (unsigned i=0; i<funNum; i++){
-    fp = generateFuncObj(funToRun[i]); 
-    printf("F %d value = %1.20E\n", fp->getID(), fp->compute(X));
+    fp = generateFuncObj(funToRun[i]);
+    printf("F %d value = %1.20E\n", fp->getID(), resultTest = fp->compute(X));
     gettimeofday(&start, NULL);
     for (unsigned j=0; j < run; j++){
-      fp->compute(X);
+      if (fp->compute(X) - resultTest > 0.1)
+      {
+        printf("result not equal to the previous result\n" );
+      }
     }
     gettimeofday(&end, NULL);
-    
+
     seconds  = end.tv_sec  - start.tv_sec;
     useconds = end.tv_usec - start.tv_usec;
 
     mtime = (((seconds) * 1000 + useconds/1000.0) + 0.5)/1000;
 
     runTimeVec.push_back(mtime);
-    printf ( "F %d, Running Time = %f s\n\n", fp->getID(), mtime);
-    
+    //printf ( "F %d, Running Time = %f s\n\n", fp->getID(), mtime);
+
+    //TODO GPU Computing
+    fp->GPUcompute(X,resultTest,run);
+
     delete fp;
   }
 

@@ -114,7 +114,7 @@ class Benchmarks{
   Benchmarks();
   virtual ~Benchmarks();
   virtual double compute(double* x){return 0;};
-	//virtual double GPUcompute(double* x,double resultTest, unsigned run){return 0;};
+	//virtual double GPUcompute_F3(double* x,double resultTest, unsigned run){return 0;};
   virtual double compute(vector<double> x){return 0;};
 
   double GPUcomputefunction(double* x,double resultTest, unsigned run);

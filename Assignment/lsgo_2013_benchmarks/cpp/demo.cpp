@@ -53,8 +53,11 @@ int main(int argc, char* argv[]){
     //printf ( "F %d, Running Time = %f s\n\n", fp->getID(), mtime);
 
     //TODO GPU Computing
+    printf("\n*****************GPU Computing Result***************************\n\n");
+  for (unsigned j=0; j < run; j++){
+    printf("[%d] Times Run\n",j );
     fp->GPUcomputefunction(X,resultTest,run);
-
+  }
     delete fp;
   }
 

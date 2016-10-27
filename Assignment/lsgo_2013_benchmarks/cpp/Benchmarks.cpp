@@ -48,7 +48,7 @@ double Benchmarks::GPUcomputefunction(double* x,double resultTest, unsigned run)
   }
 
   //dimension = 1000;
-  printf("Liang Xu\n");
+  //printf("Liang Xu\n");
   GPUcompute( anotherz,resultTest, run);
   return 0 ;
 }

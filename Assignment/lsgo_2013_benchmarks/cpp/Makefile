@@ -2,13 +2,14 @@ CC=g++
 nvcc=nvcc
 # CXXFLAGS=-Wall -pedantic -std=c++11 -O3
 CXXFLAGS =-Wall -pedantic -std=c++0x  -ggdb -DDEBUG
-CXXFLAGS_F3 = -O3 -gencode arch=compute_30,code=sm_30 -gencode arch=compute_35,code=sm_35 -gencode arch=compute_50,code=sm_50 -gencode arch=compute_52,code=sm_52
+CXXFLAGS_F3 = -O3
 OBJECTS=demo.o  Benchmarks.o \
  F1.o F2.o F3.o F4.o F5.o F6.o F7.o F8.o F9.o F10.o\
  F11.o F12.o F13.o F14.o F15.o Ackley.o
 
 demo: 	$(OBJECTS)
 	$(nvcc) $(CXXFLAGS_F3) -o demo $(OBJECTS)
+	./demo 10
 
 demo.o: demo.cpp Header.h  Benchmarks.h \
 F1.h F2.h F3.h F4.h F5.h F6.h F7.h F8.h F9.h F10.h\

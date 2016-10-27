@@ -25,3 +25,4 @@ and x = z[tid] is changing the global look up to local look up, which will make 
 
 instead of using atomicAdd(d_sum1,sharedSum1Array[0]);
 because the atomicAdd can not used for double add. However, atomicAdd is the same. because this will make the block wise add to a serial add.
+abs(result - resultTest) > 0.000000001, accurate testing

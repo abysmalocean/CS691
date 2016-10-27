@@ -128,7 +128,7 @@ double GPUcompute(double* anotherz,double resultTest, unsigned run){
         double result = 0;
         int dimension = 1000000;
 
-        int numStreams = 2;
+        int numStreams = 1;
         cudaStream_t *streams = (cudaStream_t*) malloc (numStreams * sizeof(cudaStream_t));
         for (int i = 0; i < numStreams; i++)
                 cudaStreamCreate(&streams[i]);

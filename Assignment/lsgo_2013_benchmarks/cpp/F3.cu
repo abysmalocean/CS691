@@ -38,6 +38,7 @@ double F3::compute(double*x){
     // Ovector = createShiftVector(dimension,minX,maxX);
     Ovector = readOvector();
   }
+  //printf("LiangXu\n" );
   for(i = dimension - 1; i >= 0; i--) {
     anotherz[i] = x[i] - Ovector[i];
     //printf("%d\n",dimension );

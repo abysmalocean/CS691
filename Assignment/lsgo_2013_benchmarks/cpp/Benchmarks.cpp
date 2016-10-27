@@ -179,11 +179,11 @@ double* Benchmarks::readOvector()
               d[c++] = stod(value);
             }
           iss.clear();
-          // if (c==dimension)
-          //   {
-          //     break;
-          //   }
-          // printf("%d\n",c);
+          if (c==dimension)
+             {
+               break;
+             }
+           //printf("%d\n",c);
         }
       file.close();
     }
@@ -191,6 +191,9 @@ double* Benchmarks::readOvector()
     {
       cout<<"Cannot open datafiles"<<endl;
     }
+
+//printf("LiangXU\n" );
+  /*
   int tid = 0;
   for (int i = 1; i < 1000; i++) {
     tid = i * 1000;
@@ -199,6 +202,7 @@ double* Benchmarks::readOvector()
       //printf("d[%d] = d[%d] ---> %f\n",tid+j,j,d[tid+j] );
     }
   }
+  */
   return d;
 }
 

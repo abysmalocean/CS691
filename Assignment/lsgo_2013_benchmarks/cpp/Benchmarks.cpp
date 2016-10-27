@@ -1,5 +1,4 @@
 #include "Benchmarks.h"
-
 extern "C"
 double GPUcompute(double* x,double resultTest, unsigned run);
 

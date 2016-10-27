@@ -1,5 +1,4 @@
 #include "Benchmarks.h"
-
 extern "C"
 double GPUcompute(double* x,double resultTest, unsigned run);
 
@@ -10,7 +9,7 @@ double GPUcompute(double* x,double resultTest, unsigned run);
    //******************************************************************************
  ********************************************************************************/
 
-__global__ void ackleyKernel(double* z, int dim,double * d_sum1, double * d_sum2){
+__global__ void ackleyKernel(double* z, int dim,double * d_sum1, double * d_sum2,int stream, int numberElementsPerStream ){
         //printf("Liang XU in kernel\n");
         /*******************************************************************************
            //************ First need to calcuate the X[i]**********************************
@@ -19,7 +18,7 @@ __global__ void ackleyKernel(double* z, int dim,double * d_sum1, double * d_sum2
         int tid = ( blockDim.x * blockIdx.x ) + threadIdx.x;
         __shared__ double sharedSum1Array[512]; // size of the share memory is the size of block
         __shared__ double sharedSum2Array[512]; // size of the share memory is the size of block
-
+        dim = numberElementsPerStream;
         double hat_x;
         double c1;
         double c2;
@@ -129,11 +128,18 @@ double GPUcompute(double* anotherz,double resultTest, unsigned run){
         double result = 0;
         int dimension = 1000000;
 
+        int numStreams = 2;
+        cudaStream_t *streams = (cudaStream_t*) malloc (numStreams * sizeof(cudaStream_t));
+        for (int i = 0; i < numStreams; i++)
+                cudaStreamCreate(&streams[i]);
+
         //printf("\n*****************GPU Computing Result***************************\n\n");
 
         // inilize the CUDA
         int threadsPerBlockDim = 512;
-        int gridDimSize = (dimension + threadsPerBlockDim - 1) / threadsPerBlockDim;
+        int numberElementsPerStream = (dimension + numStreams - 1) / numStreams;
+        int gridDimSize_orig = (dimension + threadsPerBlockDim - 1) / threadsPerBlockDim;
+        int gridDimSize = (numberElementsPerStream + threadsPerBlockDim - 1) / threadsPerBlockDim;
 
         dim3 blockSize(threadsPerBlockDim);
         dim3 gridSize (gridDimSize);
@@ -144,39 +150,41 @@ double GPUcompute(double* anotherz,double resultTest, unsigned run){
         double *d_x;
         double *d_sum1, *d_sum2;
         double *h_sum1, *h_sum2;
-        h_sum1 = (double *)malloc(gridDimSize * sizeof(double));
-        h_sum2 = (double *)malloc(gridDimSize * sizeof(double));
+        h_sum1 = (double *)malloc(gridDimSize_orig * sizeof(double));
+        h_sum2 = (double *)malloc(gridDimSize_orig * sizeof(double));
 
         cudaError =  cudaMalloc(&d_x,dimension * sizeof(double));
         //printf("cudaMalloc(&d_x,dimension * sizeof(double));                    "); cudaErrorCheck(cudaError);
-        cudaError =  cudaMalloc(&d_sum1,gridDimSize*sizeof(double));
+        cudaError =  cudaMalloc(&d_sum1,gridDimSize_orig*sizeof(double));
         //printf("cudaMalloc(&d_sum1,sizeof(double));                             "); cudaErrorCheck(cudaError);
-        cudaError =  cudaMalloc(&d_sum2,gridDimSize*sizeof(double));
+        cudaError =  cudaMalloc(&d_sum2,gridDimSize_orig*sizeof(double));
         //printf("cudaMalloc(&d_sum2,sizeof(double));                             "); cudaErrorCheck(cudaError);
+
 
         //Event start
         cudaEventRecord(start);
-        cudaError =  cudaMemcpy(d_x, anotherz, dimension * sizeof(double), cudaMemcpyHostToDevice);
-        //printf(" cudaMemcpy(d_x, anotherz, dimension * sizeof(double), cudaMemcpyHostToDevice);"); cudaErrorCheck(cudaError);
-        //cudaError =  cudaMemset(d_sum1, 0.000, sizeof(float));
-        //printf("cudaMemset(d_sum1, 0.000, sizeof(double));"); cudaErrorCheck(cudaError);
-        //cudaError =  cudaMemset(d_sum2, 0.000, sizeof(float));
-        //printf("cudaMemset(d_sum2, 0.000, sizeof(double));"); cudaErrorCheck(cudaError);
+        for (int i = 0; i < numStreams; i++)
+        {
 
-        ackleyKernel<<<gridSize, blockSize>>>(d_x,dimension,d_sum1,d_sum2);
+                cudaError =  cudaMemcpyAsync(&d_x[i*numberElementsPerStream], &anotherz[i*numberElementsPerStream], numberElementsPerStream * sizeof(double), cudaMemcpyHostToDevice,streams[i]);
+                //printf(" cudaMemcpy(d_x, anotherz, dimension * sizeof(double), cudaMemcpyHostToDevice);"); cudaErrorCheck(cudaError);
+                //cudaError =  cudaMemset(d_sum1, 0.000, sizeof(float));
+                //printf("cudaMemset(d_sum1, 0.000, sizeof(double));"); cudaErrorCheck(cudaError);
+                //cudaError =  cudaMemset(d_sum2, 0.000, sizeof(float));
+                //printf("cudaMemset(d_sum2, 0.000, sizeof(double));"); cudaErrorCheck(cudaError);
 
-        //result = ackley(anotherz,dimension);
+                ackleyKernel<<<gridSize, blockSize, 0, streams[i]>>>(d_x,dimension,d_sum1,d_sum2,i,numberElementsPerStream);
 
-        cudaError = cudaGetLastError();
-        //printf("Kernek Function                                                 ");cudaErrorCheck(cudaError);
-        cudaError = cudaMemcpy(h_sum1, d_sum1, gridDimSize*sizeof(double), cudaMemcpyDeviceToHost);
-        //printf("cudaMemcpy(&sum1, d_sum1, sizeof(float), cudaMemcpyDeviceToHost)"); cudaErrorCheck(cudaError);
-        cudaError = cudaMemcpy(h_sum2, d_sum2, gridDimSize*sizeof(double), cudaMemcpyDeviceToHost);
-        //printf("cudaMemcpy(&sum2, d_sum2, sizeof(float), cudaMemcpyDeviceToHost)"); cudaErrorCheck(cudaError);
-        //printf(" cpoy from kernel is %f\n",sum1 );
+                //result = ackley(anotherz,dimension);
 
-        cudaFree(d_x);
-
+                cudaError = cudaGetLastError();
+                //printf("Kernek Function                                                 ");cudaErrorCheck(cudaError);
+                cudaError = cudaMemcpyAsync(&h_sum1[i*gridDimSize], d_sum1, gridDimSize*sizeof(double), cudaMemcpyDeviceToHost,streams[i]);
+                //printf("cudaMemcpy(&sum1, d_sum1, sizeof(float), cudaMemcpyDeviceToHost)"); cudaErrorCheck(cudaError);
+                cudaError = cudaMemcpyAsync(&h_sum2[i*gridDimSize], d_sum2, gridDimSize*sizeof(double), cudaMemcpyDeviceToHost,streams[i]);
+                //printf("cudaMemcpy(&sum2, d_sum2, sizeof(float), cudaMemcpyDeviceToHost)"); cudaErrorCheck(cudaError);
+                //printf(" cpoy from kernel is %f\n",sum1 );
+        }
 
         for(int i = 0; i < gridDimSize; i++)
         {
@@ -189,7 +197,7 @@ double GPUcompute(double* anotherz,double resultTest, unsigned run){
         cudaEventRecord(stop);
         cudaEventSynchronize(stop);
         // Testing the result
-        if (abs(result - resultTest) > 0.1)
+        if (abs(result - resultTest) > 0.00001)
         {
                 printf("Result in GPU is %f\n",result );
                 printf("result not equal to the previous result in GPU computing\n" );

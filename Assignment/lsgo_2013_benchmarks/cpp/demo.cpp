@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <unistd.h>
 
+
 int main(int argc, char* argv[]){
   /*  Test the basic benchmark function */
   double* X;

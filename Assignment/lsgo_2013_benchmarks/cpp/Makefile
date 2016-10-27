@@ -9,7 +9,7 @@ OBJECTS=demo.o  Benchmarks.o \
 
 demo: 	$(OBJECTS)
 	$(nvcc) $(CXXFLAGS_F3) -o demo $(OBJECTS)
-	./demo 10
+#	./demo 10
 
 demo.o: demo.cpp Header.h  Benchmarks.h \
 F1.h F2.h F3.h F4.h F5.h F6.h F7.h F8.h F9.h F10.h\

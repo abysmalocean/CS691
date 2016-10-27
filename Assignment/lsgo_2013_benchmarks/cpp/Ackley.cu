@@ -197,7 +197,7 @@ double GPUcompute(double* anotherz,double resultTest, unsigned run){
         cudaEventRecord(stop);
         cudaEventSynchronize(stop);
         // Testing the result
-        if (abs(result - resultTest) > 0.00001)
+        if (abs(result - resultTest) > 0.000000001)
         {
                 printf("Result in GPU is %f\n",result );
                 printf("result not equal to the previous result in GPU computing\n" );

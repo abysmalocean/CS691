@@ -1,0 +1,7 @@
+/home/acano/workspace/Hadoop/FrequentPatternMining/src/main/java/Hadoop/FrequentPatternMining/AssociationRulesMapper.java
+/home/acano/workspace/Hadoop/FrequentPatternMining/src/main/java/Hadoop/FrequentPatternMining/AssociationRules.java
+/home/acano/workspace/Hadoop/FrequentPatternMining/src/main/java/Hadoop/FrequentPatternMining/FrequentItemset.java
+/home/acano/workspace/Hadoop/FrequentPatternMining/src/main/java/Hadoop/FrequentPatternMining/FrequentItemsetMapper.java
+/home/acano/workspace/Hadoop/FrequentPatternMining/src/main/java/Hadoop/FrequentPatternMining/FrequentItemsetPartitioner.java
+/home/acano/workspace/Hadoop/FrequentPatternMining/src/main/java/Hadoop/FrequentPatternMining/FrequentItemsetReducer.java
+/home/acano/workspace/Hadoop/FrequentPatternMining/src/main/java/Hadoop/FrequentPatternMining/AssociationRulesReducer.java

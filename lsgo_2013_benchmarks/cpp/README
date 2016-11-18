@@ -1,0 +1,28 @@
+This ReadMe from Liang XU
+This is the Midterm for CS691
+How to use the code
+make
+./demo [times] (option)
+
+Two techques have been used in this implementation
+1. cuda stream
+2. reduction using shard memory.
+3, chnage the variable to local register for each thread
+
+from the experiment, I found out the cuda stream is not have a good performance
+but the reduction will have very good performance.
+
+Let me explain my code a little bit.
+First, for the input array, every element is independ.
+I have created two shared variable for each of the block
+sharedSum1Array
+sharedSum2Array
+and x = z[tid] is changing the global look up to local look up, which will make the memory lookup very fast.
+    |
+    |
+    \/
+  save the final add up the final value from the first thread of a block to d_sum1[]
+
+instead of using atomicAdd(d_sum1,sharedSum1Array[0]);
+because the atomicAdd can not used for double add. However, atomicAdd is the same. because this will make the block wise add to a serial add.
+abs(result - resultTest) > 0.000000001, accurate testing
